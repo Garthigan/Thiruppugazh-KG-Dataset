@@ -1,0 +1,192 @@
+NEO4J DIRECTORY STRUCTURE
+=========================
+
+neo4j/
+ SETUP_GUIDE.md                          [COMPREHENSIVE SETUP & CONFIGURATION GUIDE]
+ DIRECTORY_MAP.txt                       [THIS FILE]
+ neo4j_query_cmd_history_2026-5-12.txt   [Original query history from execution]
+
+ cypher_queries/                         [ORGANIZED CYPHER QUERIES]
+ README.md                           [Query guide & quick reference]   
+ 01_constraints.cypher               [Unique constraints for data integrity]   
+ 02_data_import.cypher               [Data loading from JSON dataset]   
+ 03_basic_queries.cypher             [Basic statistics & graph exploration]   
+ 04_analysis_queries.cypher          [Domain-specific analysis queries]   
+ 05_graph_algorithms.cypher          [Advanced GDS algorithms]   
+
+ import/                                 [DATA IMPORT DIRECTORY]
+ .gitkeep   
+ README.md                           [Import instructions & troubleshooting]   
+
+ graph_dump/                             [BACKUPS & DATABASE DUMPS]
+ .gitkeep    
+ README.md                           [Backup & recovery procedures]    
+
+QUERY ORGANIZATION
+==================
+
+01_constraints.cypher (7 queries)
+ Create unique constraints for all node types  
+
+02_data_import.cypher (7 queries)
+ Load Song nodes from JSON  
+ Create LOCATED_AT relationships (Places)  
+ Create HAS_THEME relationships  
+ Create REFERS_TO_EVENT relationships  
+ Create MENTIONS_ENTITY relationships  
+ Create HAS_PHILOSOPHY relationships  
+ Create USES_IMAGERY relationships  
+
+03_basic_queries.cypher (10 queries)
+ Count nodes by type  
+ Count relationships  
+ Relationship distribution  
+ Graph statistics  
+ Degree distribution  
+ Graph density  
+ Schema visualization  
+
+04_analysis_queries.cypher (12 queries)
+ Theme frequency analysis  
+ Entity frequency analysis  
+ Mythological event analysis  
+ Philosophy analysis  
+ Imagery analysis  
+ Sacred location analysis  
+ Location relationships  
+ Entity-specific queries (Murugan)  
+ Song-level detailed views  
+
+05_graph_algorithms.cypher (6 procedures)
+ Graph projection  
+ PageRank analysis (entities, themes, places)  
+ Community detection (Louvain)  
+ Version checks  
+
+KNOWLEDGE GRAPH SCHEMA
+======================
+
+Nodes:
+ Song (song_number, song_name, abode, summary, url)  
+ Entity (name)  
+ Theme (name)  
+ MythEvent (name)  
+ Philosophy (name)  
+ Imagery (name)  
+ Place (name)  
+
+Relationships:
+ Song -[:MENTIONS_ENTITY]-> Entity  
+ Song -[:HAS_THEME]-> Theme  
+ Song -[:REFERS_TO_EVENT]-> MythEvent  
+ Song -[:USES_IMAGERY]-> Imagery  
+ Song -[:HAS_PHILOSOPHY]-> Philosophy  
+ Song -[:LOCATED_AT]-> Place  
+
+QUICK START
+===========
+
+1. Setup Neo4j & Install Plugins
+ Follow SETUP_GUIDE.md
+
+2. Create Constraints
+ Execute cypher_queries/01_constraints.cypher
+
+3. Load Data
+ Copy dataset to import directory
+ Execute cypher_queries/02_data_import.cypher
+
+4. Verify Import
+ Execute cypher_queries/03_basic_queries.cypher
+
+5. Analyze Data
+ Execute cypher_queries/04_analysis_queries.cypher
+ Execute cypher_queries/05_graph_algorithms.cypher
+
+EXECUTION WORKFLOW
+==================
+
+Phase 1: Preparation (5 min)
+ 01_constraints.cypher  
+
+Phase 2: Data Loading (10-30 min, depends on size)
+ 02_data_import.cypher  
+
+Phase 3: Exploration (2 min)
+ 03_basic_queries.cypher  
+
+Phase 4: Analysis (5-10 min)
+ 04_analysis_queries.cypher  
+ 05_graph_algorithms.cypher  
+
+EXPECTED STATISTICS
+===================
+
+After successful import, expect approximately:
+ Songs: ~1,335  
+ Entities: ~100+  
+ Themes: ~100+  
+ MythEvents: ~200+  
+ Philosophies: ~100+  
+ Imagery: ~300+  
+ Places: ~50+  
+ Total Relationships: ~5,000+  
+
+DOCUMENTATION FILES
+===================
+
+cypher_queries/README.md
+ Detailed query descriptions  
+ Usage instructions  
+ Performance notes  
+ Quick reference table  
+
+import/README.md
+ Dataset format specifications  
+ Directory setup  
+ Troubleshooting guide  
+
+graph_dump/README.md
+ Backup procedures  
+ Recovery instructions  
+ Export formats  
+ File naming conventions  
+
+SETUP_GUIDE.md
+ System requirements  
+ Installation steps  
+ Configuration details  
+ Query execution methods  
+ Performance optimization  
+ Troubleshooting  
+ Monitoring procedures  
+ Resources & support  
+
+RELATED DOCUMENTATION
+=====================
+
+Main Repository:     README.md
+Dataset Location:    ../dataset/
+Annotation Guide:    ../annotation_guidelines/
+Paper Reference:     ../paper/
+Figures:             ../figures/
+
+COMMAND REFERENCE
+=================
+
+Neo4j Management:
+ neo4j start              Start Neo4j service  
+ neo4j stop               Stop Neo4j service  
+ neo4j-admin dump         Create database backup  
+ neo4j-admin load         Restore database  
+
+Database Access:
+ http://localhost:7474    Neo4j Browser  
+ bolt://localhost:7687    Bolt connection  
+
+Cypher Shell:
+ cypher-shell -u neo4j    Interactive Cypher shell  
+ cypher-shell < file.sql  Execute query file  
+
+CREATED: 2026-05-12
+THIRUPPUGAZH-KG VERSION: 1.0

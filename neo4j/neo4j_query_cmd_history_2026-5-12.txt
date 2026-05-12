@@ -1,0 +1,431 @@
+CALL gds.pageRank.stream('thiruppugazhGraph', {
+  scaler: 'MinMax'
+})
+YIELD nodeId, score
+WITH gds.util.asNode(nodeId) AS node, score
+WHERE node:Entity
+RETURN node.name AS Entity, score
+ORDER BY score DESC
+LIMIT 10;
+
+CALL gds.pageRank.stream('thiruppugazhGraph')
+YIELD nodeId, score
+WITH gds.util.asNode(nodeId) AS node, score
+WHERE node:Entity
+RETURN node.name AS Entity, score
+ORDER BY score DESC
+LIMIT 10;
+
+CALL gds.graph.project(
+  'thiruppugazhGraph',
+  ['Song', 'Entity', 'Theme', 'MythEvent', 'Philosophy', 'Imagery', 'Place'],
+  {
+    MENTIONS_ENTITY: {orientation: 'UNDIRECTED'},
+    HAS_THEME: {orientation: 'UNDIRECTED'},
+    REFERS_TO_EVENT: {orientation: 'UNDIRECTED'},
+    USES_IMAGERY: {orientation: 'UNDIRECTED'},
+    HAS_PHILOSOPHY: {orientation: 'UNDIRECTED'},
+    LOCATED_AT: {orientation: 'UNDIRECTED'}
+  }
+);
+
+MATCH (n)-[r]-()
+RETURN n, count(r) AS degree
+ORDER BY degree DESC
+LIMIT 10;
+
+MATCH (n)
+WITH count(n) AS nodes
+MATCH ()-[r]->()
+WITH nodes, count(r) AS edges
+RETURN edges / (nodes * (nodes - 1)) AS density;
+
+MATCH (n)
+RETURN labels(n) AS label, count(*) AS count
+ORDER BY count DESC;
+
+CALL gds.louvain.stream('thiruppugazhGraph')
+YIELD nodeId, communityId
+RETURN count(DISTINCT communityId) AS communities;
+
+MATCH (n)
+WITH count(n) AS nodes
+MATCH ()-[r]->()
+WITH nodes, count(r) AS edges
+RETURN nodes, edges, (2.0 * edges) / nodes AS avg_degree;
+
+MATCH ()-[r]->()
+RETURN count(r) AS total_edges;
+
+MATCH (n)
+RETURN count(n) AS total_nodes;
+
+MATCH (s:Song)-[:USES_IMAGERY]->(i:Imagery)
+RETURN s,i
+LIMIT 80;
+
+Thiruchendur
+Palani
+Swamimalai
+Thiruttani;
+
+MATCH (s:Song)-[:REFERS_TO_EVENT]->(m:MythEvent)
+RETURN m.name, count(*)
+ORDER BY count(*) DESC
+LIMIT 10;
+
+MATCH (s:Song)-[:HAS_THEME]->(t:Theme)
+RETURN t.name, count(*) AS frequency
+ORDER BY frequency DESC
+LIMIT 10;
+
+MATCH (s:Song)-[:HAS_THEME]->(t:Theme)
+RETURN t.name, count(*) AS frequency
+ORDER BY frequency DESC
+LIMIT 10;
+
+MATCH (e:Entity {name:"Murugan"})<-[:MENTIONS_ENTITY]-(s:Song)
+MATCH (s)-[r]->(n)
+RETURN e,s,r,n
+LIMIT 100;
+
+MATCH (s:Song {song_number:1183})-[r]->(n)
+RETURN s, r, n;
+
+CALL db.schema.visualization();
+
+MATCH (s:Song {id: "1183"})
+OPTIONAL MATCH (s)-[r1:HAS_THEME]->(t:Theme)
+OPTIONAL MATCH (s)-[r2:MENTIONS_ENTITY]->(e:Entity)
+OPTIONAL MATCH (s)-[r3:REFERS_TO_EVENT]->(m:MythEvent)
+OPTIONAL MATCH (s)-[r4:USES_IMAGERY]->(i:Imagery)
+OPTIONAL MATCH (s)-[r5:HAS_PHILOSOPHY]->(p:Philosophy)
+OPTIONAL MATCH (s)-[r6:LOCATED_AT]->(l:Place)
+RETURN s, t, e, m, i, p, l, r1, r2, r3, r4, r5, r6;
+
+MATCH (s:Song {id: "Song_1183"})
+OPTIONAL MATCH (s)-[r1:HAS_THEME]->(t:Theme)
+OPTIONAL MATCH (s)-[r2:MENTIONS_ENTITY]->(e:Entity)
+OPTIONAL MATCH (s)-[r3:REFERS_TO_EVENT]->(m:MythEvent)
+OPTIONAL MATCH (s)-[r4:USES_IMAGERY]->(i:Imagery)
+OPTIONAL MATCH (s)-[r5:HAS_PHILOSOPHY]->(p:Philosophy)
+OPTIONAL MATCH (s)-[r6:LOCATED_AT]->(l:Place)
+RETURN s, t, e, m, i, p, l, r1, r2, r3, r4, r5, r6;
+
+MATCH (s:Song)-[:HAS_PHILOSOPHY]->(p:Philosophy)
+RETURN p.name AS philosophy, count(*) AS frequency
+ORDER BY frequency DESC
+LIMIT 15;
+
+MATCH (s:Song)-[:USES_IMAGERY]->(i:Imagery)
+RETURN i.name AS imagery, count(*) AS frequency
+ORDER BY frequency DESC
+LIMIT 15;
+
+CALL gds.pageRank.stream('thiruppugazhGraph')
+YIELD nodeId, score
+WITH gds.util.asNode(nodeId) AS node, score
+WHERE node:Theme
+RETURN node.name AS theme, score
+ORDER BY score DESC
+LIMIT 15;
+
+MATCH (s:Song)-[:LOCATED_AT]->(p:Place)
+RETURN p.name AS place, count(*) AS song_count
+ORDER BY song_count DESC
+LIMIT 15;
+
+MATCH (s:Song)-[:REFERS_TO_EVENT]->(m:MythEvent)
+RETURN m.name AS myth_event, count(*) AS frequency
+ORDER BY frequency DESC
+LIMIT 15;
+
+MATCH (s:Song)-[:HAS_THEME]->(t:Theme)
+RETURN t.name AS theme, count(*) AS frequency
+ORDER BY frequency DESC
+LIMIT 15;
+
+MATCH ()-[r]->()
+RETURN type(r) AS relationship_type, count(r) AS count
+ORDER BY count DESC;
+
+MATCH ()-[r]->() RETURN count(r) AS TotalRelationships;
+
+MATCH (n:Song) RETURN count(n) AS Songs;
+MATCH (n:Entity) RETURN count(n) AS Entities;
+MATCH (n:Theme) RETURN count(n) AS Themes;
+MATCH (n:MythEvent) RETURN count(n) AS MythEvents;
+MATCH (n:Philosophy) RETURN count(n) AS Philosophies;
+MATCH (n:Imagery) RETURN count(n) AS Imageries;
+MATCH (n:Place) RETURN count(n) AS Places;
+
+MATCH (p1:Place)<-[:LOCATED_AT]-(s:Song)-[:LOCATED_AT]->(p2:Place)
+WHERE p1 <> p2
+RETURN p1.name, p2.name, count(s) AS shared_songs
+ORDER BY shared_songs DESC
+LIMIT 20;
+
+CALL gds.louvain.stream('thiruppugazhGraph')
+YIELD nodeId, communityId
+WITH gds.util.asNode(nodeId) AS node, communityId
+WHERE node:Place
+RETURN communityId, collect(node.name) AS temples
+ORDER BY size(temples) DESC;
+
+MATCH (p:Place)<-[:LOCATED_AT]-(s:Song)-[:MENTIONS_ENTITY]->(e:Entity {name:'Murugan'})
+RETURN p, s
+LIMIT 200;
+
+CALL gds.pageRank.stream('thiruppugazhGraph')
+YIELD nodeId, score
+WITH gds.util.asNode(nodeId) AS node, score
+WHERE node:Place
+RETURN node.name AS temple, score
+ORDER BY score DESC
+LIMIT 20;
+
+MATCH (s:Song)-[:LOCATED_AT]->(p:Place)
+RETURN p.name AS temple, count(*) AS song_count
+ORDER BY song_count DESC
+LIMIT 20;
+
+CALL gds.graph.project(
+  'thiruppugazhGraph',
+  ['Song','Entity','Theme','MythEvent','Philosophy','Imagery','Place'],
+  '*'
+)
+YIELD graphName, nodeCount, relationshipCount;
+
+CALL gds.graph.drop('thiruppugazhGraph');
+
+MATCH (p:Place)
+RETURN count(p);
+
+CALL apoc.load.json("file:///thiruppugazh_dataset.json")
+YIELD value
+MATCH (s:Song {song_number:value.song_number})
+
+WITH s, value
+WHERE value.abode IS NOT NULL AND trim(value.abode) <> ""
+
+MERGE (p:Place {name:value.abode})
+MERGE (s)-[:LOCATED_AT]->(p);
+
+CALL apoc.load.json("file:///thiruppugazh_dataset.json.json")
+YIELD value
+MATCH (s:Song {song_number:value.song_number})
+
+WITH s, value
+WHERE value.abode IS NOT NULL AND trim(value.abode) <> ""
+
+MERGE (p:Place {name:value.abode})
+MERGE (s)-[:LOCATED_AT]->(p);
+
+CALL db.labels();
+
+CALL gds.graph.project(
+  'thiruppugazhGraph',
+  ['Song', 'Theme', 'MythEvent', 'Entity', 'Place'],
+  {
+    HAS_THEME: {orientation: 'UNDIRECTED'},
+    REFERS_TO_EVENT: {orientation: 'UNDIRECTED'},
+    MENTIONS_ENTITY: {orientation: 'UNDIRECTED'},
+    LOCATED_AT: {orientation: 'UNDIRECTED'}
+  }
+)
+YIELD graphName, nodeCount, relationshipCount;
+
+RETURN gds.version() AS gds_version;
+
+MATCH (s:Song)-[:MENTIONS_ENTITY]->(e:Entity {name:"Murugan"})
+RETURN s.song_number, s.song_name;
+
+MATCH (s:Song)-[:HAS_THEME]->(t:Theme)
+RETURN t.name, count(*) AS frequency
+ORDER BY frequency DESC;
+
+MATCH (s:Song)-[:REFERS_TO_EVENT]->(m:MythEvent)
+WHERE m.name CONTAINS "Suran"
+RETURN s;
+
+MATCH (s:Song {song_number:1183})-[r]->(n)
+RETURN s,r,n;
+
+CALL apoc.load.json("file:///thiruppugazh_dataset.json")
+YIELD value
+MATCH (s:Song {song_number:value.song_number})
+
+UNWIND value.imagery AS img
+
+MERGE (i:Imagery {name:img})
+MERGE (s)-[:USES_IMAGERY]->(i);
+
+CALL apoc.load.json("file:///thiruppugazh_dataset.json")
+YIELD value
+MATCH (s:Song {song_number:value.song_number})
+
+UNWIND value.philosophy AS ph
+
+MERGE (p:Philosophy {name:ph})
+MERGE (s)-[:HAS_PHILOSOPHY]->(p);
+
+CALL apoc.load.json("file:///thiruppugazh_dataset.json")
+YIELD value
+MATCH (s:Song {song_number:value.song_number})
+
+UNWIND value.entities AS entity
+
+MERGE (e:Entity {name:entity})
+MERGE (s)-[:MENTIONS_ENTITY]->(e);
+
+CALL apoc.load.json("file:///thiruppugazh_dataset.json")
+YIELD value
+MATCH (s:Song {song_number:value.song_number})
+
+UNWIND value.myth_events AS event
+
+MERGE (e:MythEvent {name:event})
+MERGE (s)-[:REFERS_TO_EVENT]->(e);
+
+CALL apoc.load.json("file:///thiruppugazh_dataset.json")
+YIELD value
+MATCH (s:Song {song_number:value.song_number})
+
+UNWIND value.myth_events AS event
+
+MERGE (e:MythEvent {name:event})
+MERGE (s)-[:REFERS_TO_EVENT]->(e);
+
+CALL apoc.load.json("file:///thiruppugazh_dataset.json")
+YIELD value
+MATCH (s:Song {song_number:value.song_number})
+
+UNWIND value.themes AS theme
+
+MERGE (t:Theme {name:theme})
+MERGE (s)-[:HAS_THEME]->(t);
+
+MATCH (s:Song)
+RETURN count(s);
+
+CALL apoc.load.json("file:///thiruppugazh_dataset.json")
+YIELD value
+
+MERGE (s:Song {song_number:value.song_number})
+SET s.song_name = value.song_name,
+    s.abode = value.abode,
+    s.summary = value.summary,
+    s.url = value.url;
+
+CREATE CONSTRAINT song_number_unique IF NOT EXISTS
+FOR (s:Song)
+REQUIRE s.song_number IS UNIQUE;
+
+CREATE CONSTRAINT theme_unique IF NOT EXISTS
+FOR (t:Theme)
+REQUIRE t.name IS UNIQUE;
+
+CREATE CONSTRAINT entity_unique IF NOT EXISTS
+FOR (e:Entity)
+REQUIRE e.name IS UNIQUE;
+
+CREATE CONSTRAINT event_unique IF NOT EXISTS
+FOR (m:MythEvent)
+REQUIRE m.name IS UNIQUE;
+
+CREATE CONSTRAINT philosophy_unique IF NOT EXISTS
+FOR (p:Philosophy)
+REQUIRE p.name IS UNIQUE;
+
+CREATE CONSTRAINT imagery_unique IF NOT EXISTS
+FOR (i:Imagery)
+REQUIRE i.name IS UNIQUE;
+
+CALL apoc.load.json("file:///thiruppugazh_dataset.json")
+YIELD value
+RETURN value.song_number, value.song_name
+LIMIT 5;
+
+CALL apoc.load.json("file:///thiruppugazh_dataset.json")
+CALL YIELD value
+RETURN value.song_number, value.song_name
+LIMIT 5;
+
+CALL apoc.load.json("file:///thiruppugazh_dataset.json")
+CALL YIELD value
+RETURN value.song_number, value.song_name
+LIMIT 5;
+
+CALL apoc.load.json("file:///thiruppugazh_dataset.json")CALL 
+YIELD value
+RETURN value.song_number, value.song_name
+LIMIT 5;
+
+CALL apoc.load.json("file:///thiruppugazh_dataset.json");
+
+CALL apoc.load.json("file:///thiruppugazh_dataset.json");
+
+CALL apoc.load.json("file:///thiruppugazh.json");
+
+CALL apoc.help("import");
+
+call apoc.load.json('file:/thiruppugazh_dataset.json');
+
+call apoc.load.json('file:/thiruppugazh_dataset.json');
+
+call apoc.load.json('file:/thiruppugazh_dataset.json');
+
+call apoc.load.json();
+
+call apoc.load.json($url);
+
+call apoc.help('load');
+
+CALL apoc.config.list()
+YIELD key, value
+WHERE key CONTAINS "apoc.import.file"
+RETURN key, value;
+
+CALL apoc.config.list()
+YIELD key, value
+WHERE key CONTAINS "apoc.import.file"
+RETURN key, value;
+
+MATCH p=()-[]->() RETURN p LIMIT 25;
+
+MATCH p=()-[]->() RETURN p LIMIT 25;
+
+MATCH p=()-[]->() RETURN p LIMIT 25;
+
+MATCH p=()-[]->() RETURN p LIMIT 25;
+
+RETURN apoc.version();
+
+RETURN apoc.version();
+
+CALL apoc.load.json("file:///thiruppugazh_dataset.json")
+YIELD value
+RETURN value.song_number, value.song_name
+LIMIT 5;
+
+CREATE CONSTRAINT song_number_unique IF NOT EXISTS
+FOR (s:Song)
+REQUIRE s.song_number IS UNIQUE;
+
+CREATE CONSTRAINT entity_unique IF NOT EXISTS
+FOR (e:Entity)
+REQUIRE e.name IS UNIQUE;
+
+CREATE CONSTRAINT theme_unique IF NOT EXISTS
+FOR (t:Theme)
+REQUIRE t.name IS UNIQUE;
+
+CREATE CONSTRAINT myth_unique IF NOT EXISTS
+FOR (m:MythEvent)
+REQUIRE m.name IS UNIQUE;
+
+MATCH p=()-[]->() RETURN p LIMIT 25;
+
+MATCH (n) RETURN n LIMIT 25;
+
+call apoc.help('load');
