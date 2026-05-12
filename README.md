@@ -6,19 +6,44 @@ This repository provides the annotated dataset, knowledge graph resources, annot
 
 ---
 
-## Overview
+## Abstract
 
-The dataset contains semantic annotations for 1,335 Tamil devotional hymns, including:
+This research presents the construction of a knowledge graph from the Thiruppugazh corpus. Manual semantic annotations span entities, themes, mythological events, philosophical concepts, imagery, and sacred places, enabling graph-based analysis using **Neo4j**. The resulting KG reveals dominant devotional patterns and sacred geographies. Graph algorithms — including **PageRank** and **Louvain community detection** — identify central entities such as Murugan and prominent temples like Thiruchendur, and uncover answers to research questions on mythological distributions and thematic clusters in Tamil literature.
 
-- Named entities
-- Devotional themes
-- Mythological events
-- Philosophical concepts
-- Symbolic imagery
-- Sacred locations
-- Inter-entity relationships
+---
 
-Using these annotations, a Neo4j-based knowledge graph was constructed to support semantic querying, graph analytics, and digital humanities research.
+## Contributions
+
+- **Annotated Dataset** — A novel, manually annotated dataset covering entities, themes, mythology, philosophy, imagery, and places across the Thiruppugazh corpus.
+- **Murugan Devotional Knowledge Graph** — A structured KG representing the devotional, mythological, and geographic dimensions of the corpus.
+- **Digital Humanities Framework** — A reusable framework for constructing knowledge graphs from classical religious texts, advancing computational studies in low-resource languages.
+
+---
+
+## Corpus
+
+| Attribute    | Details                         |
+| ------------ | ------------------------------- |
+| Title        | Thiruppugazh (திருப்புகழ்)      |
+| Author       | Arunagirinathar (அருணகிரிநாதர்) |
+| Century      | 15th century CE                 |
+| Language     | Tamil                           |
+| Genre        | Devotional / Bhakti poetry      |
+| Deity        | Lord Murugan (Karthikeya)       |
+| No. of Songs | 1,335                           |
+
+---
+
+## Annotation Schema
+
+Semantic annotations cover the following categories:
+
+- **Entities** — deities, saints, and named persons
+- **Themes** — devotional and philosophical themes
+- **Mythological Events** — stories and events from Hindu mythology
+- **Philosophy** — spiritual and philosophical concepts
+- **Imagery** — poetic and symbolic imagery
+- **Places** — sacred geographies and temples (e.g., Thiruchendur, Palani)
 
 ---
 
@@ -50,33 +75,14 @@ Using these annotations, a Neo4j-based knowledge graph was constructed to suppor
 
 ---
 
-## Dataset Contents
+## Technology Stack
 
-### `dataset/`
-
-- **thiruppugazh_kg.json** - Complete annotated dataset with all 1,335 hymns
-- **schema.json** - JSON schema defining the annotation structure
-- **sample_records.json** - Sample records for reference
-
-### `neo4j/`
-
-- **import/** - CSV/JSON files for Neo4j import
-- **cypher_queries/** - Pre-built Cypher queries for common graph operations
-- **graph_dump/** - Database dump files
-
-### `annotation_guidelines/`
-
-- **annotation_guidelines.pdf** - Detailed annotation guidelines used for semantic labeling
-
-### `figures/`
-
-- **knowledge_graph_figures/** - Visualizations and diagrams of the knowledge graph
-
-### `paper/`
-
-- **ACL2026_camera_ready.pdf** - Peer-reviewed paper describing the dataset and methodology
-
----
+| Component        | Tool / Technology                            |
+| ---------------- | -------------------------------------------- |
+| Graph Database   | [Neo4j](https://neo4j.com/)                  |
+| Graph Algorithms | Neo4j Graph Data Science (PageRank, Louvain) |
+| Annotation       | Manual semantic annotation                   |
+| Language         | Tamil (low-resource)                         |
 
 ## Getting Started
 
@@ -120,16 +126,8 @@ Using these annotations, a Neo4j-based knowledge graph was constructed to suppor
 
 ## Citation
 
-If you use this dataset in your research, please cite:
-
-```bibtex
-@inproceedings{thiruppugazh2026,
-  title={Thiruppugazh-KG: A Semantically Annotated Knowledge Graph Dataset of Classical Tamil Devotional Literature},
-  author={Kumarasamy, Garthigan and Thevakumar, Jubeerathan and Uthayakumar, Sathurgini and Kajanath, Disne and Sivalingam, Narthana and Thayasivam, Uthayasanker},
-  booktitle={Proceedings of the Sixth Workshop on Speech, Vision, and Language Technologies for Dravidian Languages},
-  year={2026}
-}
-```
+If you use this dataset or framework in your research, please cite this work
+(citation details to be added upon publication).
 
 ---
 
