@@ -133,12 +133,8 @@ If you use this dataset in your research, please cite:
 
 ---
 
-## License
-
-[Add your license information here]
-
----
-
 ## Contact
 
-For questions or contributions, please [add contact information here].
+For questions or contributions, please
+Garthigan Kumarasamy
+garthigank.25@cse.mrt.ac.lk
